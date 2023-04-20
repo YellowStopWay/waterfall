@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .item {
+            margin-bottom: 10px;
+            padding: 10px;
+            flex: 1 0 calc(25% - 10px);
+        }
+
+        .item img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container"></div>
+    <script>
+        // 生成随机数据
+        function generateData(count) {
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                const width = Math.floor(Math.random() * 400) + 200;
+                const height = Math.floor(Math.random() * 400) + 200;
+                const color = Math.floor(Math.random() * 16777215).toString(16);
+                const title = 'Title ' + i;
+                data.push({ width, height, color, title });
+            }
+            return data;
+        }
+
+        // 渲染数据
+        function renderData(data) {
+            const container = document.querySelector('.container');
+            container.innerHTML = '';
+            data.forEach((item) => {
+                const html = `
+          <div class="item">
+            <img src="https://via.placeholder.com/${item.width}x${item.height}/${item.color}" alt="">
+            <h3>${item.title}</h3>
+          </div>
+        `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        // 监听滚动事件
+        function onScroll() {
+            const screenHeight = window.innerHeight;
+            const items = document.querySelectorAll('.item');
+            items.forEach((item) => {
+                const rect = item.getBoundingClientRect();
+                const visible = (rect.top >= 0 && rect.top <= screenHeight) || (rect.bottom >= 0 && rect.bottom <= screenHeight);
+                if (visible) {
+                    item.classList.add('visible');
+                } else {
+                    item.classList.remove('visible');
+                }
+            });
+        }
+
+        // 初始化
+        let data = generateData(20);
+        renderData(data);
+        onScroll();
+
+        // 监听滚动事件
+        window.addEventListener('scroll', onScroll);
+    </script>
+</body>
+
+</html>
